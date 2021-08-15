@@ -28,7 +28,6 @@
 }
 
 .Cell {
-  background-color: aquamarine;
   color: black;
   flex-grow: 1;
   border: black solid 1px;
@@ -37,10 +36,22 @@
   cursor: pointer;
 }
 
-.Cell-clicked {
-  background-color: green;
+.unknown {
+  background-color: lightgray;
 }
 
-.Cell-exploded {
+.clear {
+  background-color: lightgreen;
+}
+
+.warning {
+  background-color: yellow;
+}
+
+.danger {
   background-color: red;
+}
+
+.exploded {
+  background-color: black;
 }
