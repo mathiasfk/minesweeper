@@ -11,7 +11,6 @@ export const Board = (props:any) => {
           index={cell.index} 
           onClick={props.onClick} 
           status={cell.data.status}
-          gameover={props.gameover}
         ></Cell>)
     }
   </div>
