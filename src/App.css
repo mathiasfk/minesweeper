@@ -40,3 +40,7 @@
 .Cell-clicked {
   background-color: green;
 }
+
+.Cell-exploded {
+  background-color: red;
+}
