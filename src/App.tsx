@@ -3,7 +3,9 @@ import { Board } from './components/Board';
 import { useEffect, useState } from 'react';
 
 const BOARD_SIZE = 25;
-const MAX_MINES = Math.sqrt(BOARD_SIZE);
+const MAX_MINES = Math.sqrt(BOARD_SIZE) - 1;
+const POINTS_INCREMENT = 100;
+const POINTS_WIN = 500;
 
 const isLeftColumn = (index:number) => {
   const rowSize = Math.sqrt(BOARD_SIZE);
@@ -25,29 +27,35 @@ const isBottomRow = (index:number) => {
   return (index >= BOARD_SIZE - rowSize);
 }
 
-const generateMines = () => {
-  let cells = [];
-  let mineCount = 0;
-
-  for(let i=0; i < BOARD_SIZE; i++)
-  {
-    const isMine = Math.random() < 0.2 && (mineCount++ < MAX_MINES);
-    cells.push({
-      index: i,
-      data: {
-        mine: isMine,
-        status: 'unknown'
-      }
-    });
-  }
-  return cells;
-}
-
-
 function App() {
   const [score, setScore] = useState(0);
   const [gameover, setGameover] = useState(false);
+  const [win, setWin] = useState(false);
   const [cells, setCells] = useState<any>([]);
+
+  const generateMines = () => {
+    let cells = [];
+    let mineCount = 0;
+    
+    for(let i=0; i < BOARD_SIZE; i++)
+    {
+      let isMine = false;
+      if(Math.random() < 0.2 && mineCount < MAX_MINES){
+        isMine = true;
+        mineCount++;
+      }
+
+      console.log(mineCount);
+      cells.push({
+        index: i,
+        data: {
+          mine: isMine,
+          status: 'unknown'
+        }
+      });
+    }
+    return cells;
+  }
 
   useEffect(() => setCells(generateMines()),[]);
 
@@ -107,14 +115,39 @@ function App() {
     return status;
   }
 
+  const countUnknown = () => {
+    return cells.filter(
+      (cell:any) => cell.data.status === 'unknown'
+    ).reduce(
+      (sum: number , cur: any) => sum + 1, 0
+    )
+  }
+
+  const countMines = () => {
+    return cells.filter(
+      (cell:any) => cell.data.mine
+    ).reduce(
+      (sum: number , cur: any) => sum + 1, 0
+    )
+  }
+
   const onClick = (index:number) => {
-    if (gameover) return;
+    if (gameover || win) return;
 
     const hitMine = checkMine(index);
-    setScore(hitMine ? score : score + 100);
+    setScore(hitMine ? score : score + POINTS_INCREMENT);
 
     const neighborMines = countNeighbors(index);
+    const unknownCount = countUnknown();
+    const mineCount = countMines();
+
+    console.log(unknownCount);
     updateStatus(index, selectStatus(hitMine, neighborMines));
+
+    if(unknownCount <= mineCount + 1){
+      setWin(true);
+      setScore(score + POINTS_WIN);
+    }
 
     if(hitMine) setGameover(true);
   };
@@ -122,7 +155,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {gameover ? "Game over - " : " "} Score: {score}
+        {win && !gameover ? "You won! - " : ""}
+        {gameover ? "Game over - " : ""}
+        Score: {score}
       </header>
       <div className="Board-container">
         <Board cells={cells} onClick={onClick}></Board>
