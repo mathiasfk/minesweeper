@@ -66,6 +66,11 @@ function App() {
     });
   }
 
+  const getStatus = (index:number) => {
+    const validIndex = (index + BOARD_SIZE) % BOARD_SIZE;
+    return cells.filter((cell:any) => cell.index === validIndex)[0].data.status;
+  }
+
   const countNeighbors = (index:number) => {
     const rowSize = Math.sqrt(BOARD_SIZE);
     let count = 0;
@@ -135,7 +140,11 @@ function App() {
     if (gameover || win) return;
 
     const hitMine = checkMine(index);
-    setScore(hitMine ? score : score + POINTS_INCREMENT);
+    
+    if (getStatus(index) === 'unknown' && !hitMine)
+    {
+      setScore(score + POINTS_INCREMENT);
+    }
 
     const neighborMines = countNeighbors(index);
     const unknownCount = countUnknown();
