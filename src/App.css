@@ -44,12 +44,30 @@
   background-color: lightgreen;
 }
 
-.warning {
+.danger-1 {
   background-color: yellow;
 }
 
-.danger {
+.danger-2 {
+  background-color: orange;;
+}
+.danger-3 {
   background-color: red;
+}
+.danger-4 {
+  background-color: darkred;
+}
+.danger-5 {
+  background-color: violet;
+}
+.danger-6 {
+  background-color: darkorchid;
+}
+.danger-7 {
+  background-color: darkslateblue;
+}
+.danger-8 {
+  background-color: blue;
 }
 
 .exploded {

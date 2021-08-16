@@ -2,7 +2,7 @@ import './App.css';
 import { Board } from './components/Board';
 import { useEffect, useState } from 'react';
 
-const BOARD_SIZE = 25;
+const BOARD_SIZE = 36;
 const MAX_MINES = Math.sqrt(BOARD_SIZE) - 1;
 const POINTS_INCREMENT = 100;
 const POINTS_WIN = 500;
@@ -113,10 +113,8 @@ function App() {
       status = 'exploded';
     } else if(neighborMines === 0){
       status = 'clear';
-    } else if(neighborMines === 1){
-      status = 'warning';
-    } else if(neighborMines > 1){
-      status = 'danger';
+    }else if(neighborMines > 0){
+      status = `danger-${neighborMines}`;
     }
     return status;
   }
