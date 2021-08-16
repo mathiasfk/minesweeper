@@ -168,6 +168,12 @@ function App() {
     setWin(false);
   }
 
+  const onNext = () => {
+    setCells(generateMines());
+    setGameover(false);
+    setWin(false);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -177,8 +183,11 @@ function App() {
         <br/>
         High score: {highScore}
       </header>
-      <div>
-        <button className="Restart" onClick={onRestart}>Restart</button>
+      <div className="Button-container">
+        <button onClick={onRestart}>Restart</button>
+      </div>
+      <div className="Button-container">
+        {win ? <button onClick={onNext}>Next</button> : <></>}
       </div>
       <div className="Board-container">
         <Board size={BOARD_SIZE} cells={cells} onClick={onClick}></Board>
