@@ -29,6 +29,7 @@ const isBottomRow = (index:number) => {
 
 function App() {
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
   const [gameover, setGameover] = useState(false);
   const [win, setWin] = useState(false);
   const [cells, setCells] = useState<any>([]);
@@ -161,15 +162,28 @@ function App() {
     if(hitMine) setGameover(true);
   };
 
+  const onRestart = () => {
+    setCells(generateMines());
+    setGameover(false);
+    setHighScore(score > highScore ? score : highScore);
+    setScore(0);
+    setWin(false);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         {win && !gameover ? "You won! - " : ""}
         {gameover ? "Game over - " : ""}
         Score: {score}
+        <br/>
+        High score: {highScore}
       </header>
+      <div>
+        <button className="Restart" onClick={onRestart}>Restart</button>
+      </div>
       <div className="Board-container">
-        <Board cells={cells} onClick={onClick}></Board>
+        <Board size={BOARD_SIZE} cells={cells} onClick={onClick}></Board>
       </div>
     </div>
   );
