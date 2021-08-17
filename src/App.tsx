@@ -183,14 +183,14 @@ function App() {
         <br/>
         High score: {highScore}
       </header>
-      <div className="Button-container">
-        <button onClick={onRestart}>Restart</button>
-      </div>
-      <div className="Button-container">
-        {win ? <button onClick={onNext}>Next</button> : <></>}
-      </div>
       <div className="Board-container">
         <Board size={BOARD_SIZE} cells={cells} onClick={onClick}></Board>
+      </div>
+      <div className="Button-container">
+        {gameover && !win ?<button className="Button restart" onClick={onRestart}>Restart</button> : <></>}
+      </div>
+      <div className="Button-container">
+        {win && !gameover ? <button className="Button next" onClick={onNext}>Continue</button> : <></>}
       </div>
     </div>
   );
