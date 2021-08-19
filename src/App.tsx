@@ -33,6 +33,7 @@ function App() {
   const [gameover, setGameover] = useState(false);
   const [win, setWin] = useState(false);
   const [cells, setCells] = useState<any>([]);
+  const [winStreak, setWinStreak] = useState(0);
 
   const generateMines = () => {
     let cells = [];
@@ -142,7 +143,7 @@ function App() {
     
     if (getStatus(index) === 'unknown' && !hitMine)
     {
-      setScore(score + POINTS_INCREMENT);
+      updateScore(score + POINTS_INCREMENT);
     }
 
     const neighborMines = countNeighbors(index);
@@ -153,12 +154,28 @@ function App() {
     updateStatus(index, selectStatus(hitMine, neighborMines));
 
     if(unknownCount <= mineCount + 1){
-      setWin(true);
-      setScore(score + POINTS_WIN);
+      onWin();
     }
 
-    if(hitMine) setGameover(true);
+    if(hitMine){
+      onLose();
+    }
   };
+
+  const updateScore = (score: number) => {
+    setHighScore(score >= highScore ? score : highScore);
+    setScore(score);
+  }
+
+  const onWin = () => {
+    setWin(true);
+    updateScore(score + POINTS_WIN);
+    setWinStreak(winStreak + 1);
+  }
+
+  const onLose = () => {
+    setGameover(true);
+  }
 
   const onRestart = () => {
     setCells(generateMines());
@@ -166,6 +183,7 @@ function App() {
     setHighScore(score > highScore ? score : highScore);
     setScore(0);
     setWin(false);
+    setWinStreak(0);
   }
 
   const onNext = () => {
@@ -182,6 +200,8 @@ function App() {
         Score: {score}
         <br/>
         High score: {highScore}
+        <br/>
+        Win streak: {winStreak}
       </header>
       <div className="Board-container">
         <Board size={BOARD_SIZE} cells={cells} onClick={onClick}></Board>
