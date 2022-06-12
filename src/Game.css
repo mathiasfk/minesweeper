@@ -46,53 +46,6 @@
   grid-gap: 0.2em;
 }
 
-.Cell {
-  color: black;
-  flex-grow: 1;
-  border: black solid 1px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
 .Button-container {
   padding-top: 20px;
-}
-
-.Unknown {
-  background-color: lightgray;
-}
-
-.Clear {
-  background-color: lightgreen;
-}
-
-.Danger-1 {
-  background-color: yellow;
-}
-
-.Danger-2 {
-  background-color: orange;;
-}
-.Danger-3 {
-  background-color: red;
-}
-.Danger-4 {
-  background-color: darkred;
-}
-.Danger-5 {
-  background-color: violet;
-}
-.Danger-6 {
-  background-color: darkorchid;
-}
-.Danger-7 {
-  background-color: darkslateblue;
-}
-.Danger-8 {
-  background-color: blue;
-}
-
-.Exploded {
-  background-color: black;
 }

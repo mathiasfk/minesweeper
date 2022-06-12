@@ -1,6 +1,6 @@
 import { CellState } from "../types/CellStatus";
 import { GameState } from "../types/GameState";
-import { generateGameState, generateMines, revealCell } from "./GameStateManagement";
+import { countNeighboringMines, generateGameState, generateMines, revealCell } from "./GameStateManagement";
 
 describe('When the game state is generated', () => {
 
@@ -46,6 +46,11 @@ describe('When the game state is generated', () => {
     const gameState = generateGameState(3,1);
     expect(gameState.win).toBeFalsy();
   })
+
+  test('the gameover condition should be false', () => {
+    const gameState = generateGameState(3,1);
+    expect(gameState.gameover).toBeFalsy();
+  })
 })
 
 describe('When the mines are generated', () => {
@@ -81,21 +86,76 @@ describe('When the mines are generated', () => {
 describe('When an a cell is revealed', () => {
 
   test('should be clear', () => {
-    const gameState: GameState = {
-      cells: generateMines(1, 0),
-    }
+    const gameState: GameState = generateGameState(1, 0);
     const newGameState = revealCell(gameState, 0);
 
     expect(newGameState.cells[0].data.status).toBe(CellState.Clear);
   })
 
   test('should be exploded', () => {
-    const gameState: GameState = {
-      cells: generateMines(1, 1),
-    }
+    const gameState: GameState = generateGameState(1, 1);
     const newGameState = revealCell(gameState, 0);
 
     expect(newGameState.cells[0].data.status).toBe(CellState.Exploded);
   })
-  
+
+  test('should be danger', () => {
+    const gameState: GameState = generateGameState(2, 0);
+    gameState.cells[1].data.mine = true;
+    const newGameState = revealCell(gameState, 0);
+
+    expect(newGameState.cells[0].data.status).toBe(CellState.Danger);
+  })
+})
+
+describe('The number of neighbouring mines', () => {
+
+  test('should be 0', () => {
+    const gameState: GameState = generateGameState(9, 0);
+    gameState.cells[8].data.mine = true;
+    const mines = countNeighboringMines(gameState.cells, 0)
+
+    expect(mines).toBe(0);
+  })
+
+  test('should be 1', () => {
+    const gameState: GameState = generateGameState(9, 0);
+    gameState.cells[1].data.mine = true;
+    const mines = countNeighboringMines(gameState.cells, 0)
+
+    expect(mines).toBe(1);
+  })
+
+  test('should be 2', () => {
+    const gameState: GameState = generateGameState(9, 0);
+    gameState.cells[0].data.mine = true;
+    gameState.cells[2].data.mine = true;
+    const mines = countNeighboringMines(gameState.cells, 1)
+
+    expect(mines).toBe(2);
+  })
+
+  test('should be 4', () => {
+    const gameState: GameState = generateGameState(9, 0);
+    gameState.cells[0].data.mine = true;
+    gameState.cells[2].data.mine = true;
+    gameState.cells[3].data.mine = true;
+    gameState.cells[5].data.mine = true;
+    const mines = countNeighboringMines(gameState.cells, 4)
+
+    expect(mines).toBe(4);
+  })
+
+  test('should be 6', () => {
+    const gameState: GameState = generateGameState(9, 0);
+    gameState.cells[0].data.mine = true;
+    gameState.cells[2].data.mine = true;
+    gameState.cells[3].data.mine = true;
+    gameState.cells[5].data.mine = true;
+    gameState.cells[6].data.mine = true;
+    gameState.cells[8].data.mine = true;
+    const mines = countNeighboringMines(gameState.cells, 4)
+
+    expect(mines).toBe(6);
+  })
 })

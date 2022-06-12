@@ -22,7 +22,9 @@ export const Board = (props:Props) => {
           index={cell.index} 
           onClick={props.onClick} 
           status={cell.data.status}
-        ></Cell>)
+          neighboringMines={cell.data.neighboringMines}
+        >
+        </Cell>)
     }
   </div>
 )}

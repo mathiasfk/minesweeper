@@ -1,4 +1,4 @@
-import "./App.css";
+import "./Game.css";
 import { Board } from "./components/Board";
 import { useCallback, useEffect, useState } from "react";
 import { Header } from "./components/Header";
@@ -6,10 +6,12 @@ import { GameState } from "./types/GameState";
 import { generateGameState, revealCell } from "./state/GameStateManagement";
 
 const initalGameState: GameState = {
+    size: 0,
     cells: [],
     score: 0,
     win: false,
     winStreak: 0,
+    gameover: false,
 }
 
 function Game() {
@@ -24,7 +26,7 @@ function Game() {
         setGameState(revealCell(gameState, index));
     }
 
-    useEffect(() => initializeGame(9, 1), [initializeGame]);
+    useEffect(() => initializeGame(16, 2), [initializeGame]);
 
     return (
     <div className="App">
@@ -36,7 +38,7 @@ function Game() {
         highScore={0}
       />
       <div className="Board-container">
-        <Board size={9} cells={gameState.cells} onClick={onClickUpdateState}></Board>
+        <Board size={gameState.size} cells={gameState.cells} onClick={onClickUpdateState}></Board>
       </div>
     </div>
   );
