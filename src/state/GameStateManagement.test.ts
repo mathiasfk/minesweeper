@@ -51,6 +51,10 @@ describe('When the game state is generated', () => {
     const gameState = generateGameState(3,1);
     expect(gameState.gameover).toBeFalsy();
   })
+
+  test('the number of mines shouldnt be larger than cells', () => {
+    expect(() => generateGameState(3,4)).toThrow()
+  })
 })
 
 describe('When the mines are generated', () => {
@@ -100,11 +104,40 @@ describe('When an a cell is revealed', () => {
       expect(newGameState.score).toBeGreaterThan(0);
     })
 
-    test('should win the game', () => {
+    test('should win the game (1 cell)', () => {
       const gameState: GameState = generateGameState(1, 0);
       const newGameState = revealCell(gameState, 0);
   
       expect(newGameState.win).toBeTruthy();
+      expect(newGameState.gameover).toBeFalsy();
+    })
+
+    test('should win the game (2 cells)', () => {
+      const gameState: GameState = generateGameState(2, 1);
+      gameState.cells[0].data.mine = false;
+      gameState.cells[1].data.mine = true;
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.win).toBeTruthy();
+      expect(newGameState.gameover).toBeFalsy();
+    })
+
+    test('should lose the game (1 cell)', () => {
+      const gameState: GameState = generateGameState(1, 1);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.gameover).toBeTruthy();
+      expect(newGameState.win).toBeFalsy();
+    })
+
+    test('should lose the game (2 cells)', () => {
+      const gameState: GameState = generateGameState(2, 1);
+      gameState.cells[0].data.mine = false;
+      gameState.cells[1].data.mine = true;
+      const newGameState = revealCell(gameState, 1);
+  
+      expect(newGameState.gameover).toBeTruthy();
+      expect(newGameState.win).toBeFalsy();
     })
   })
 

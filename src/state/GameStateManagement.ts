@@ -16,6 +16,9 @@ export const generateGameState = (size: number, numMines: number) => {
 }
 
 export const generateMines = (size: number, mineCount: number) => {
+    if (mineCount > size){
+        throw RangeError("mineCount should not be larger than size")
+    }
     const xSize = Math.sqrt(size);
     const cells: CellData[] = Array.from({length: size}, (_, i) => ({
         index: i,
@@ -62,7 +65,8 @@ export const revealCell = (prevState: GameState, index: number) => {
             }
         }
     })
-    if (newState.cells.filter(c => c.data.status === CellState.Unknown).length === newState.mines){
+    if (!newState.gameover 
+        && newState.cells.filter(c => c.data.status === CellState.Unknown).length === newState.mines){
         newState.win = true;
     }
     newState.score += 100;

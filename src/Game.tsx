@@ -4,6 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { GameState } from "./types/GameState";
 import { generateGameState, revealCell } from "./state/GameStateManagement";
+import { Controls } from "./components/Controls";
+
+const INITIAL_SIZE = 9;
+const INITIAL_MINES = 1;
 
 const initalGameState: GameState = {
     size: 0,
@@ -27,24 +31,30 @@ function Game() {
         setGameState(revealCell(gameState, index));
     }
 
-    useEffect(() => initializeGame(16, 2), [initializeGame]);
+    const onClickNext = () => {
+        initializeGame(Math.pow(Math.sqrt(gameState.size) + 1, 2), Math.round(gameState.mines * 1.5))
+    }
+
+    const onClickRestart = () => {
+        initializeGame(INITIAL_SIZE, INITIAL_MINES)
+    }
+
+    useEffect(() => initializeGame(INITIAL_SIZE, INITIAL_MINES), [initializeGame]);
 
     return (
     <div className="App">
       <Header
-        isWin={false}
-        isGameover={false}
+        isWin={gameState.win}
+        isGameover={gameState.gameover}
         score={gameState.score}
-        winStreak={0}
+        winStreak={gameState.winStreak}
         highScore={0}
+        mines={gameState.mines}
       />
       <div className="Board-container">
         <Board size={gameState.size} cells={gameState.cells} onClick={onClickUpdateState}></Board>
       </div>
-      <div>
-      {gameState.win && "Congratulations!"}
-      {gameState.gameover && "Better luck next time..."}
-      </div>
+      <Controls gameState={gameState} onClickNext={onClickNext} onClickRestart={onClickRestart}/>
     </div>
   );
 }

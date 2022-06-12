@@ -4,6 +4,7 @@ type Props = {
     score: number,
     highScore: number,
     winStreak: number,
+    mines: number,
 }
 
 export function Header(props: Props){
@@ -16,5 +17,7 @@ export function Header(props: Props){
         High score: {props.highScore}
         <br/>
         Win streak: {props.winStreak}
+        <br/>
+        Mines on this game: {props.mines}
   </header>)
 }
