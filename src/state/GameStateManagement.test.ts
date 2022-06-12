@@ -85,26 +85,53 @@ describe('When the mines are generated', () => {
 
 describe('When an a cell is revealed', () => {
 
-  test('should be clear', () => {
-    const gameState: GameState = generateGameState(1, 0);
-    const newGameState = revealCell(gameState, 0);
+  describe('and the cell has no bomb or neighboring bombs', () => {
+    test('should be clear', () => {
+      const gameState: GameState = generateGameState(1, 0);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.cells[0].data.status).toBe(CellState.Clear);
+    })
 
-    expect(newGameState.cells[0].data.status).toBe(CellState.Clear);
+    test('the score should be incremented', () => {
+      const gameState: GameState = generateGameState(1, 0);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.score).toBeGreaterThan(0);
+    })
+
+    test('should win the game', () => {
+      const gameState: GameState = generateGameState(1, 0);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.win).toBeTruthy();
+    })
   })
 
-  test('should be exploded', () => {
-    const gameState: GameState = generateGameState(1, 1);
-    const newGameState = revealCell(gameState, 0);
+  describe('and the cell has a bomb', () => {
+    test('should be exploded', () => {
+      const gameState: GameState = generateGameState(1, 1);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.cells[0].data.status).toBe(CellState.Exploded);
+    })
 
-    expect(newGameState.cells[0].data.status).toBe(CellState.Exploded);
+    test('should be gameover', () => {
+      const gameState: GameState = generateGameState(1, 1);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.gameover).toBeTruthy();
+    })
   })
 
-  test('should be danger', () => {
-    const gameState: GameState = generateGameState(2, 0);
-    gameState.cells[1].data.mine = true;
-    const newGameState = revealCell(gameState, 0);
-
-    expect(newGameState.cells[0].data.status).toBe(CellState.Danger);
+  describe('and the cell has no bomb but do have neighboring bombs', () => {
+    test('should be danger', () => {
+      const gameState: GameState = generateGameState(2, 0);
+      gameState.cells[1].data.mine = true;
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.cells[0].data.status).toBe(CellState.Danger);
+    })
   })
 })
 

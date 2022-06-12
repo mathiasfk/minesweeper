@@ -8,6 +8,7 @@ import { generateGameState, revealCell } from "./state/GameStateManagement";
 const initalGameState: GameState = {
     size: 0,
     cells: [],
+    mines: 0,
     score: 0,
     win: false,
     winStreak: 0,
@@ -39,6 +40,10 @@ function Game() {
       />
       <div className="Board-container">
         <Board size={gameState.size} cells={gameState.cells} onClick={onClickUpdateState}></Board>
+      </div>
+      <div>
+      {gameState.win && "Congratulations!"}
+      {gameState.gameover && "Better luck next time..."}
       </div>
     </div>
   );
