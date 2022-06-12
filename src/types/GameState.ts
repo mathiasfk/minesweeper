@@ -5,6 +5,7 @@ export type GameState = {
     cells: CellData[],
     mines: number,
     score: number,
+    highScore: number,
     win: boolean,
     winStreak: number,
     gameover: boolean,

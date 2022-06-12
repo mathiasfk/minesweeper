@@ -14,6 +14,7 @@ const initalGameState: GameState = {
     cells: [],
     mines: 0,
     score: 0,
+    highScore: 0,
     win: false,
     winStreak: 0,
     gameover: false,
@@ -23,8 +24,8 @@ function Game() {
 
     const [gameState, setGameState] = useState<GameState>(initalGameState);
 
-    const initializeGame = useCallback((size: number, numMines: number) => {
-        setGameState(generateGameState(size, numMines));
+    const initializeGame = useCallback(() => {
+        setGameState(generateGameState(INITIAL_SIZE, INITIAL_MINES));
     },[]);
 
     const onClickUpdateState = (index: number) => {
@@ -32,14 +33,28 @@ function Game() {
     }
 
     const onClickNext = () => {
-        initializeGame(Math.pow(Math.sqrt(gameState.size) + 1, 2), Math.round(gameState.mines * 1.5))
+        const newGame = generateGameState(
+            Math.pow(Math.sqrt(gameState.size) + 1, 2), 
+            Math.round(gameState.mines * 1.5),
+            gameState.score,
+            gameState.highScore,
+            gameState.winStreak,
+        )
+        setGameState(newGame);
     }
 
     const onClickRestart = () => {
-        initializeGame(INITIAL_SIZE, INITIAL_MINES)
+        const newGame = generateGameState(
+            INITIAL_SIZE,
+            INITIAL_MINES,
+            0,
+            gameState.highScore,
+            0,
+        )
+        setGameState(newGame);
     }
 
-    useEffect(() => initializeGame(INITIAL_SIZE, INITIAL_MINES), [initializeGame]);
+    useEffect(() => initializeGame(), [initializeGame]);
 
     return (
     <div className="App">
@@ -48,7 +63,7 @@ function Game() {
         isGameover={gameState.gameover}
         score={gameState.score}
         winStreak={gameState.winStreak}
-        highScore={0}
+        highScore={gameState.highScore}
         mines={gameState.mines}
       />
       <div className="Board-container">

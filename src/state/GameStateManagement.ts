@@ -2,14 +2,21 @@ import { CellData } from "../types/CellData";
 import { CellState } from "../types/CellStatus";
 import { GameState } from "../types/GameState";
 
-export const generateGameState = (size: number, numMines: number) => {
+export const generateGameState = (
+    size: number, 
+    numMines: number, 
+    score?: number,
+    highScore?: number,
+    winStreak?: number,
+) => {
     const newGame: GameState = {
         size: size,
         cells: generateMines(size, numMines),
         mines: numMines,
-        score: 0,
+        score: score || 0,
+        highScore: highScore || 0,
         win: false,
-        winStreak: 0,
+        winStreak: winStreak || 0,
         gameover: false,
     }
     return newGame;
@@ -62,14 +69,18 @@ export const revealCell = (prevState: GameState, index: number) => {
                 const mines = countNeighboringMines(prevState.cells, index);
                 c.data.status = mines > 0 ? CellState.Danger : CellState.Clear;
                 c.data.neighboringMines = mines;
+                newState.score += 100;
             }
         }
     })
     if (!newState.gameover 
         && newState.cells.filter(c => c.data.status === CellState.Unknown).length === newState.mines){
         newState.win = true;
+        newState.winStreak++;
+        if (newState.score > newState.highScore){
+            newState.highScore = newState.score;
+        }
     }
-    newState.score += 100;
     return newState;
 }
 
