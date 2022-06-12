@@ -66,10 +66,11 @@ export const revealCell = (prevState: GameState, index: number) => {
                 c.data.status = CellState.Exploded
                 newState.gameover = true;
             }else{
-                const mines = countNeighboringMines(prevState.cells, index);
-                c.data.status = mines > 0 ? CellState.Danger : CellState.Clear;
-                c.data.neighboringMines = mines;
+                c = updateCellState(c, prevState.cells, index);
                 newState.score += 100;
+                if(c.data.status === CellState.Clear){
+                    newState.cells = revealClearCells(prevState.cells, index);
+                }
             }
         }
     })
@@ -81,6 +82,14 @@ export const revealCell = (prevState: GameState, index: number) => {
         }
     }
     return newState;
+}
+
+const updateCellState = (cellData: CellData, cells: CellData[], index: number) => {
+    const newData = Object.assign({}, cellData);
+    const mines = countNeighboringMines(cells, index);
+    newData.data.status = mines > 0 ? CellState.Danger : CellState.Clear;
+    newData.data.neighboringMines = mines;
+    return newData;
 }
 
 export const isWinCondition = (gameState: GameState) => {
@@ -105,11 +114,45 @@ export const flagCell = (prevState: GameState, index: number) => {
 }
 
 export const countNeighboringMines = (cells: CellData[], index: number) => {
-    const x = cells[index].x;
-    const y = cells[index].y;
+    const analyzedCell = cells[index];
 
     return cells
-    .filter(c => ([x-1, x, x+1].includes(c.x) && [y-1, y+1].includes(c.y)) 
-                 || ([x-1, x+1].includes(c.x) && y === c.y))
+    .filter(c => isNeighbor(analyzedCell, c))
     .filter(c => c.data.mine).length
+}
+
+const isNeighbor = (self: CellData, other: CellData) => {
+    const x = self.x;
+    const y = self.y;
+    return ([x-1, x, x+1].includes(other.x) && [y-1, y+1].includes(other.y)) 
+        || ([x-1, x+1].includes(other.x) && y === other.y);
+}
+
+export const revealNeighboringClearCells = (cells: CellData[], index: number) => {
+    const analyzedCell = cells[index];
+
+    return cells
+    .map(c => {
+        if(isNeighbor(analyzedCell, c) && !c.data.mine){
+            return updateCellState(c, cells, c.index);
+        }
+        return c;
+    })
+}
+
+export const revealClearCells = (cells: CellData[], index: number) => {
+    let updatedCells = cells;
+    let clearedCells = cells.filter(c => c.data.status === CellState.Clear).length;
+    let newClearedCells = 0;
+    while(clearedCells !== newClearedCells){
+        clearedCells = newClearedCells;
+        for (let i = 0; i < cells.length; i++){
+            const normalizedIndex = i % cells.length;
+            if(cells[normalizedIndex].data.status === CellState.Clear){
+                updatedCells = revealNeighboringClearCells(cells, normalizedIndex);
+            }
+        }
+        newClearedCells = cells.filter(c => c.data.status === CellState.Clear).length;
+    }
+    return updatedCells;
 }
