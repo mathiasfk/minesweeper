@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 
-export const Cell = (props:any) => {
+type Props = {
+  index: number,
+  onClick: (index:number) => void,
+  status: string,
+}
+
+export const Cell = (props:Props) => {
 
   const [classes, setClasses] = useState<string>("");
 

@@ -1,6 +1,13 @@
+import { CellData } from "../../types/CellData";
 import { Cell } from "../Cell";
 
-export const Board = (props:any) => {
+type Props = {
+  size:number,
+  cells:CellData[], 
+  onClick:(index:number) => void,
+}
+
+export const Board = (props:Props) => {
 
   const gridStyle = {
     gridTemplateColumns: 'auto '.repeat(Math.sqrt(props.size))
@@ -10,7 +17,7 @@ export const Board = (props:any) => {
   <div className="Board" style={gridStyle} data-testid="board">
     {
       props.cells.map(
-        (cell:any) => <Cell 
+        cell => <Cell 
           key={cell.index} 
           index={cell.index} 
           onClick={props.onClick} 

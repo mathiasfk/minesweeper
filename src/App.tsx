@@ -2,6 +2,7 @@ import './App.css';
 import { Board } from './components/Board';
 import { useEffect, useState } from 'react';
 import { Header } from './components/Header';
+import { CellData } from './types/CellData';
 
 const BOARD_SIZE = 36;
 const MAX_MINES = Math.sqrt(BOARD_SIZE) - 1;
@@ -33,7 +34,7 @@ function App() {
   const [highScore, setHighScore] = useState(0);
   const [gameover, setGameover] = useState(false);
   const [win, setWin] = useState(false);
-  const [cells, setCells] = useState<any>([]);
+  const [cells, setCells] = useState<CellData[]>([]);
   const [winStreak, setWinStreak] = useState(0);
 
   const generateMines = () => {
@@ -64,14 +65,14 @@ function App() {
 
   const checkMine = (index:number) => {
     const validIndex = (index + BOARD_SIZE) % BOARD_SIZE;
-    return cells.some((cell:any) => {
+    return cells.some(cell => {
       return (cell.index === validIndex && cell.data.mine)
     });
   }
 
   const getStatus = (index:number) => {
     const validIndex = (index + BOARD_SIZE) % BOARD_SIZE;
-    return cells.filter((cell:any) => cell.index === validIndex)[0].data.status;
+    return cells.filter(cell => cell.index === validIndex)[0].data.status;
   }
 
   const countNeighbors = (index:number) => {
@@ -93,12 +94,12 @@ function App() {
   }
 
   const updateStatus = (index:number, status:string) => {
-    const updateCells = cells.map((cell:any) => {
+    const updateCells = cells.map(cell => {
       if(cell.index === index){
         return {
           index: cell.index, 
           data: {
-            mine: cell.mine,
+            mine: cell.data.mine,
             status: status
           }
         }
@@ -123,17 +124,17 @@ function App() {
 
   const countUnknown = () => {
     return cells.filter(
-      (cell:any) => cell.data.status === 'unknown'
+      cell => cell.data.status === 'unknown'
     ).reduce(
-      (sum: number , cur: any) => sum + 1, 0
+      (sum: number,) => sum + 1, 0
     )
   }
 
   const countMines = () => {
     return cells.filter(
-      (cell:any) => cell.data.mine
+      cell => cell.data.mine
     ).reduce(
-      (sum: number , cur: any) => sum + 1, 0
+      (sum: number,) => sum + 1, 0
     )
   }
 
