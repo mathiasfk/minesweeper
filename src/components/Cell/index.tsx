@@ -1,19 +1,15 @@
-import { useEffect, useState } from 'react';
+import { CellState } from '../../types/CellStatus';
 
 type Props = {
   index: number,
   onClick: (index:number) => void,
-  status: string,
+  status: CellState,
 }
 
 export const Cell = (props:Props) => {
 
-  const [classes, setClasses] = useState<string>("");
-
-  useEffect(() => setClasses(props.status), [props.status]);
-
   const onClick = (index:number) => {
       props.onClick(index);
   };
-  return <div className={"Cell " + classes} onClick={() => onClick(props.index)}></div>;
+  return <div data-testid="cell" className={"Cell " + CellState[props.status]} onClick={() => onClick(props.index)}></div>;
 }

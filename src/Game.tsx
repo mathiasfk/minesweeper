@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { CellData } from "./types/CellData";
 import { GameState } from "./types/GameState";
+import { CellState } from "./types/CellStatus";
 
 const initalGameState: GameState = {
     cells: []
@@ -14,7 +15,7 @@ export const generateMines = (size: number, mineCount: number) => {
         index: i,
         data: {
             mine: false,
-            status: 'unknown'
+            status: CellState.Unknown
         }
     }));
     let currentCount = 0;
@@ -37,18 +38,33 @@ export const generateMines = (size: number, mineCount: number) => {
     return cells;
 }
 
+export const revealCell = (prevState: GameState, index: number) => {
+    let newState = prevState;
+    newState.cells.forEach(c => {
+        if(c.index === index){
+            c.data.status = c.data.mine ? CellState.Exploded : CellState.Clear;
+        }
+    })
+    return newState;
+}
+
+export const generateGameState = (size: number, numMines: number) => {
+    const newGame: GameState = {
+        cells: generateMines(size, numMines),
+    }
+    return newGame;
+}
+
 function Game() {
 
     const [gameState, setGameState] = useState<GameState>(initalGameState);
 
-    const initializeGame = useCallback((size: number, max_mines: number) => {
-        const newGame: GameState = {
-            cells: generateMines(size, max_mines),
-        }
-        setGameState(newGame);
-    },[])
+    const initializeGame = useCallback((size: number, numMines: number) => {
+        setGameState(generateGameState(size, numMines));
+    },[]);
 
     const onClickUpdateState = (index: number) => {
+
     }
 
     useEffect(() => initializeGame(9, 1), [initializeGame]);

@@ -59,40 +59,40 @@
   padding-top: 20px;
 }
 
-.unknown {
+.Unknown {
   background-color: lightgray;
 }
 
-.clear {
+.Clear {
   background-color: lightgreen;
 }
 
-.danger-1 {
+.Danger-1 {
   background-color: yellow;
 }
 
-.danger-2 {
+.Danger-2 {
   background-color: orange;;
 }
-.danger-3 {
+.Danger-3 {
   background-color: red;
 }
-.danger-4 {
+.Danger-4 {
   background-color: darkred;
 }
-.danger-5 {
+.Danger-5 {
   background-color: violet;
 }
-.danger-6 {
+.Danger-6 {
   background-color: darkorchid;
 }
-.danger-7 {
+.Danger-7 {
   background-color: darkslateblue;
 }
-.danger-8 {
+.Danger-8 {
   background-color: blue;
 }
 
-.exploded {
+.Exploded {
   background-color: black;
 }
