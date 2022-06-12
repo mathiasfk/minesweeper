@@ -1,6 +1,7 @@
 import './App.css';
 import { Board } from './components/Board';
 import { useEffect, useState } from 'react';
+import { Header } from './components/Header';
 
 const BOARD_SIZE = 36;
 const MAX_MINES = Math.sqrt(BOARD_SIZE) - 1;
@@ -47,7 +48,7 @@ function App() {
         mineCount++;
       }
 
-      console.log(mineCount);
+      //console.log(mineCount);
       cells.push({
         index: i,
         data: {
@@ -150,7 +151,7 @@ function App() {
     const unknownCount = countUnknown();
     const mineCount = countMines();
 
-    console.log(unknownCount);
+    //console.log(unknownCount);
     updateStatus(index, selectStatus(hitMine, neighborMines));
 
     if(unknownCount <= mineCount + 1){
@@ -194,15 +195,13 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        {win && !gameover ? "You won! - " : ""}
-        {gameover ? "Game over - " : ""}
-        Score: {score}
-        <br/>
-        High score: {highScore}
-        <br/>
-        Win streak: {winStreak}
-      </header>
+      <Header 
+        isWin={win} 
+        isGameover={gameover} 
+        score={score} 
+        winStreak={winStreak} 
+        highScore={highScore}
+      />
       <div className="Board-container">
         <Board size={BOARD_SIZE} cells={cells} onClick={onClick}></Board>
       </div>

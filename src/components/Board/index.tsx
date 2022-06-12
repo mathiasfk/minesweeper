@@ -7,7 +7,7 @@ export const Board = (props:any) => {
   }
 
   return (
-  <div className="Board" style={gridStyle}>
+  <div className="Board" style={gridStyle} data-testid="board">
     {
       props.cells.map(
         (cell:any) => <Cell 

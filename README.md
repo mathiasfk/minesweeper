@@ -1,5 +1,11 @@
 # Minesweeper
 
+## Run
+```
+npm install
+npm start
+```
+
 ## Deploy
 ```
 npm run deploy
