@@ -6,6 +6,7 @@ type Props = {
   size:number,
   cells:CellData[], 
   onClick:(index:number) => void,
+  onRightClick:(index:number) => void,
 }
 
 export const Board = (props:Props) => {
@@ -22,6 +23,7 @@ export const Board = (props:Props) => {
           key={cell.index} 
           index={cell.index} 
           onClick={props.onClick} 
+          onRightClick={props.onRightClick}
           status={cell.data.status}
           neighboringMines={cell.data.neighboringMines}
         >

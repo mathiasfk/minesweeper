@@ -73,14 +73,34 @@ export const revealCell = (prevState: GameState, index: number) => {
             }
         }
     })
-    if (!newState.gameover 
-        && newState.cells.filter(c => c.data.status === CellState.Unknown).length === newState.mines){
+    if (isWinCondition(newState)){
         newState.win = true;
         newState.winStreak++;
         if (newState.score > newState.highScore){
             newState.highScore = newState.score;
         }
     }
+    return newState;
+}
+
+export const isWinCondition = (gameState: GameState) => {
+    return !gameState.gameover && (
+        gameState.cells.filter(c => c.data.status === CellState.Unknown).length
+        + gameState.cells.filter(c => c.data.status === CellState.Flagged).length
+        === gameState.mines);
+}
+
+export const flagCell = (prevState: GameState, index: number) => {
+    if(prevState.win || prevState.gameover){
+        return prevState;
+    }
+
+    let newState = Object.assign({}, prevState);
+    newState.cells.forEach(c => {
+        if(c.index === index){
+            c.data.status = c.data.status === CellState.Flagged ? CellState.Unknown : CellState.Flagged;
+        }
+    });
     return newState;
 }
 

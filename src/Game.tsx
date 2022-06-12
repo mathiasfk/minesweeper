@@ -3,7 +3,7 @@ import { Board } from "./components/Board";
 import { useCallback, useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { GameState } from "./types/GameState";
-import { generateGameState, revealCell } from "./state/GameStateManagement";
+import { flagCell, generateGameState, revealCell } from "./state/GameStateManagement";
 import { Controls } from "./components/Controls";
 
 const INITIAL_SIZE = 9;
@@ -31,6 +31,10 @@ function Game() {
     const onClickUpdateState = (index: number) => {
         setGameState(revealCell(gameState, index));
     }
+
+    const onRightClickUpdateState = (index: number) => {
+      setGameState(flagCell(gameState, index));
+  }
 
     const onClickNext = () => {
         const newGame = generateGameState(
@@ -67,7 +71,7 @@ function Game() {
         mines={gameState.mines}
       />
       <div className="Board-container">
-        <Board size={gameState.size} cells={gameState.cells} onClick={onClickUpdateState}></Board>
+        <Board size={gameState.size} cells={gameState.cells} onClick={onClickUpdateState} onRightClick={onRightClickUpdateState}></Board>
       </div>
       <Controls gameState={gameState} onClickNext={onClickNext} onClickRestart={onClickRestart}/>
     </div>

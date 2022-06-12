@@ -3,4 +3,5 @@ export enum CellState {
     Clear,
     Danger,
     Exploded,
+    Flagged,
 }
