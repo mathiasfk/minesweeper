@@ -37,15 +37,6 @@
   background-color: yellow;
 }
 
-.Board {
-  display: grid;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 0.2em;
-}
-
 .Button-container {
   padding-top: 20px;
 }

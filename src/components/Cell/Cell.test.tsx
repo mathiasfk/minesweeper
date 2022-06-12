@@ -4,7 +4,7 @@ import { CellState } from '../../types/CellStatus';
 
 describe('When the a Cell is rendered', () => {
 
-    test('should appear no the screen', () => {
+    test('should appear on the screen', () => {
         render(<Cell index={0} onClick={() => null} status={CellState.Unknown}/>);
 
         const cell = screen.getByTestId('cell');

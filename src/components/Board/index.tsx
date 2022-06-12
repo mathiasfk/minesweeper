@@ -1,3 +1,4 @@
+import "./board.css";
 import { CellData } from "../../types/CellData";
 import { Cell } from "../Cell";
 
