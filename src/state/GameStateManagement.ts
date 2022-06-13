@@ -61,7 +61,7 @@ export const revealCell = (prevState: GameState, index: number) => {
 
     let newState = Object.assign({}, prevState);
     newState.cells.forEach(c => {
-        if(c.index === index){
+        if(c.index === index && c.data.status !== CellState.Flagged){
             if (c.data.mine){
                 c.data.status = CellState.Exploded
                 newState.gameover = true;

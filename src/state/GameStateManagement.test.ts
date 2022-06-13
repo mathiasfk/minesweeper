@@ -1,6 +1,6 @@
 import { CellState } from "../types/CellStatus";
 import { GameState } from "../types/GameState";
-import { countNeighboringMines, generateGameState, generateMines, revealCell } from "./GameStateManagement";
+import { countNeighboringMines, flagCell, generateGameState, generateMines, revealCell } from "./GameStateManagement";
 
 describe('When the game state is generated', () => {
 
@@ -184,6 +184,22 @@ describe('When an a cell is revealed', () => {
       const newGameState = revealCell(gameState, 0);
   
       expect(newGameState.cells[0].data.status).toBe(prevStatus);
+    })
+  })
+
+  describe('and the cell was already flagged', () => {
+    test('it should continue flagged', () => {
+      const gameState = flagCell(generateGameState(1, 1), 0);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.cells[0].data.status).toBe(CellState.Flagged);
+    })
+
+    test('should not be gameover', () => {
+      const gameState = flagCell(generateGameState(1, 1), 0);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.gameover).toBeFalsy();
     })
   })
 })
