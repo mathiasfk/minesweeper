@@ -122,22 +122,62 @@ describe('When an a cell is revealed', () => {
       expect(newGameState.gameover).toBeFalsy();
     })
 
-    test('should lose the game (1 cell)', () => {
-      const gameState: GameState = generateGameState(1, 1);
+    test('should auto-reveal other clear cells', () => {
+      const gameState: GameState = generateGameState(4, 0);
       const newGameState = revealCell(gameState, 0);
-  
-      expect(newGameState.gameover).toBeTruthy();
-      expect(newGameState.win).toBeFalsy();
+
+      expect(newGameState.cells[1].data.status).toBe(CellState.Clear);
+      expect(newGameState.cells[2].data.status).toBe(CellState.Clear);
+      expect(newGameState.cells[3].data.status).toBe(CellState.Clear);
     })
 
-    test('should lose the game (2 cells)', () => {
-      const gameState: GameState = generateGameState(2, 1);
-      gameState.cells[0].data.mine = false;
-      gameState.cells[1].data.mine = true;
-      const newGameState = revealCell(gameState, 1);
-  
-      expect(newGameState.gameover).toBeTruthy();
-      expect(newGameState.win).toBeFalsy();
+    test('should auto-reveal neighbor danger cells', () => {
+      //Arrange
+      const gameState: GameState = generateGameState(9, 0);
+      gameState.cells[8].data.mine = true;
+
+      //Act
+      const newGameState = revealCell(gameState, 0);
+
+      //Assert
+      expect(newGameState.cells[4].data.status).toBe(CellState.Danger);
+      expect(newGameState.cells[5].data.status).toBe(CellState.Danger);
+      expect(newGameState.cells[7].data.status).toBe(CellState.Danger);
+      // 0 1 2
+      // 3 4 5
+      // 6 7 8
+    })
+
+    test('should not auto-reveal non-neighbor cells', () => {
+      //Arrange
+      const gameState: GameState = generateGameState(9, 0);
+      gameState.cells[4].data.mine = true;
+
+      //Act
+      const newGameState = revealCell(gameState, 0);
+
+      //Assert
+      expect(newGameState.cells[5].data.status).toBe(CellState.Unknown);
+      expect(newGameState.cells[7].data.status).toBe(CellState.Unknown);
+      // 0 1 2
+      // 3 4 5
+      // 6 7 8
+    })
+
+    test('should not auto-reveal flagged cells', () => {
+      //Arrange
+      const gameState: GameState = generateGameState(9, 0);
+      gameState.cells[8].data.mine = true;
+      gameState.cells[1].data.status = CellState.Flagged;
+
+      //Act
+      const newGameState = revealCell(gameState, 0);
+
+      //Assert
+      expect(newGameState.cells[1].data.status).toBe(CellState.Flagged);
+      // 0 1 2
+      // 3 4 5
+      // 6 7 8
     })
   })
 
@@ -154,6 +194,24 @@ describe('When an a cell is revealed', () => {
       const newGameState = revealCell(gameState, 0);
   
       expect(newGameState.gameover).toBeTruthy();
+    })
+    
+    test('should lose the game (1 cell)', () => {
+      const gameState: GameState = generateGameState(1, 1);
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.gameover).toBeTruthy();
+      expect(newGameState.win).toBeFalsy();
+    })
+
+    test('should lose the game (2 cells)', () => {
+      const gameState: GameState = generateGameState(2, 1);
+      gameState.cells[0].data.mine = false;
+      gameState.cells[1].data.mine = true;
+      const newGameState = revealCell(gameState, 1);
+  
+      expect(newGameState.gameover).toBeTruthy();
+      expect(newGameState.win).toBeFalsy();
     })
   })
 
@@ -188,7 +246,7 @@ describe('When an a cell is revealed', () => {
   })
 
   describe('and the cell was already flagged', () => {
-    test('it should continue flagged', () => {
+    test('should continue flagged', () => {
       const gameState = flagCell(generateGameState(1, 1), 0);
       const newGameState = revealCell(gameState, 0);
   

@@ -67,7 +67,7 @@ export const revealCell = (prevState: GameState, index: number) => {
                 newState.gameover = true;
             }else{
                 if (c.data.status === CellState.Unknown){
-                    c = updateCellState(c, prevState.cells, index);
+                    c = updateRevealedCellState(c, prevState.cells, index);
                     newState.score += 100;
                     if(c.data.status === CellState.Clear){
                         newState.cells = revealClearCells(prevState.cells, index);
@@ -86,7 +86,7 @@ export const revealCell = (prevState: GameState, index: number) => {
     return newState;
 }
 
-const updateCellState = (cellData: CellData, cells: CellData[], index: number) => {
+const updateRevealedCellState = (cellData: CellData, cells: CellData[], index: number) => {
     const newData = Object.assign({}, cellData);
     const mines = countNeighboringMines(cells, index);
     newData.data.status = mines > 0 ? CellState.Danger : CellState.Clear;
@@ -135,8 +135,8 @@ export const revealNeighboringClearCells = (cells: CellData[], index: number) =>
 
     return cells
     .map(c => {
-        if(isNeighbor(analyzedCell, c) && !c.data.mine){
-            return updateCellState(c, cells, c.index);
+        if(isNeighbor(analyzedCell, c) && c.data.status !== CellState.Flagged && !c.data.mine){
+            return updateRevealedCellState(c, cells, c.index);
         }
         return c;
     })
