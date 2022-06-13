@@ -66,10 +66,12 @@ export const revealCell = (prevState: GameState, index: number) => {
                 c.data.status = CellState.Exploded
                 newState.gameover = true;
             }else{
-                c = updateCellState(c, prevState.cells, index);
-                newState.score += 100;
-                if(c.data.status === CellState.Clear){
-                    newState.cells = revealClearCells(prevState.cells, index);
+                if (c.data.status === CellState.Unknown){
+                    c = updateCellState(c, prevState.cells, index);
+                    newState.score += 100;
+                    if(c.data.status === CellState.Clear){
+                        newState.cells = revealClearCells(prevState.cells, index);
+                    }
                 }
             }
         }

@@ -166,6 +166,26 @@ describe('When an a cell is revealed', () => {
       expect(newGameState.cells[0].data.status).toBe(CellState.Danger);
     })
   })
+
+  describe('and the cell was already revealed', () => {
+    test('the score shouldnt increment', () => {
+      const gameState = revealCell(generateGameState(1, 0), 0);
+      const prevScore = gameState.score;
+
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.score).toBe(prevScore);
+    })
+
+    test('the status shouldnt change', () => {
+      const gameState = revealCell(generateGameState(1, 0), 0);
+      const prevStatus = gameState.cells[0].data.status;
+
+      const newGameState = revealCell(gameState, 0);
+  
+      expect(newGameState.cells[0].data.status).toBe(prevStatus);
+    })
+  })
 })
 
 describe('The number of neighbouring mines', () => {
