@@ -24,16 +24,26 @@ function Game() {
 
     const [gameState, setGameState] = useState<GameState>(initalGameState);
 
+    const saveGameState = (gameState: GameState) => {
+      setGameState(gameState);
+      localStorage.setItem("gameState", JSON.stringify(gameState));
+    }
+
     const initializeGame = useCallback(() => {
-        setGameState(generateGameState(INITIAL_SIZE, INITIAL_MINES));
+      const serializedGameState = localStorage.getItem("gameState");
+      if (serializedGameState){
+        saveGameState(JSON.parse(serializedGameState))
+      }else {
+        saveGameState(generateGameState(INITIAL_SIZE, INITIAL_MINES));
+      }
     },[]);
 
     const onClickUpdateState = (index: number) => {
-        setGameState(revealCell(gameState, index));
+        saveGameState(revealCell(gameState, index));
     }
 
     const onRightClickUpdateState = (index: number) => {
-      setGameState(flagCell(gameState, index));
+      saveGameState(flagCell(gameState, index));
   }
 
     const onClickNext = () => {
@@ -44,7 +54,7 @@ function Game() {
             gameState.highScore,
             gameState.winStreak,
         )
-        setGameState(newGame);
+        saveGameState(newGame);
     }
 
     const onClickRestart = () => {
@@ -55,7 +65,7 @@ function Game() {
             gameState.highScore,
             0,
         )
-        setGameState(newGame);
+        saveGameState(newGame);
     }
 
     useEffect(() => initializeGame(), [initializeGame]);
