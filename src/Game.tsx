@@ -8,6 +8,8 @@ import { Controls } from "./components/Controls";
 
 const INITIAL_SIZE = 9;
 const INITIAL_MINES = 1;
+const MAX_SIZE = 400;
+const MAX_MINES = MAX_SIZE/2;
 
 const initalGameState: GameState = {
     size: 0,
@@ -47,14 +49,20 @@ function Game() {
   }
 
     const onClickNext = () => {
-        const newGame = generateGameState(
-            Math.pow(Math.sqrt(gameState.size) + 1, 2), 
-            Math.round(gameState.mines * 1.5),
-            gameState.score,
-            gameState.highScore,
-            gameState.winStreak,
-        )
-        saveGameState(newGame);
+      let newSize =  Math.pow(Math.sqrt(gameState.size) + 1, 2);
+      if (newSize > MAX_SIZE) newSize = MAX_SIZE;
+
+      let newMines =  Math.round(gameState.mines * 1.5);
+      if (newMines > MAX_MINES) newMines = MAX_MINES;
+
+      const newGame = generateGameState(
+        newSize, 
+        newMines,
+        gameState.score,
+        gameState.highScore,
+        gameState.winStreak,
+      )
+      saveGameState(newGame);
     }
 
     const onClickRestart = () => {
